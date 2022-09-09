@@ -1,3 +1,5 @@
+package lw1a;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,12 +12,9 @@ public class Window implements ActionListener, ChangeListener {
     final private JButton button;
     final private JSpinner spinner0;
     final private JSpinner spinner1;
-    //private Thread th1, th2;
     private MyThread th1, th2;
     public void actionPerformed(ActionEvent e){
         if(e.getSource()==button) {
-            //th1 = new Thread(new Runner1(this));
-            //th2 = new Thread(new Runner2(this));
             th1 = new MyThread(slider,10);
             th2 = new MyThread(slider,90);
             th1.setPriority(1);
@@ -37,12 +36,7 @@ public class Window implements ActionListener, ChangeListener {
         System.out.println("th1: " + th1.getPriority());
         System.out.println("th2: " + th2.getPriority());
     }
-    public JSlider getSlider(){
-        return slider;
-    }
     Window (String name, int width, int height) {
-
-
         frame = new JFrame(name);
         frame.setSize(width, height);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -57,21 +51,21 @@ public class Window implements ActionListener, ChangeListener {
         frame.add(slider);
 
         button = new JButton("Start!");
-        button.setBounds(225, 375, 150, 75);
+        button.setBounds(225, 215, 150, 75);
         button.addActionListener(this);
         frame.add(button);
 
         spinner0 = new JSpinner();
         spinner0.setModel(new SpinnerNumberModel(1, Thread.MIN_PRIORITY, Thread.MAX_PRIORITY, 1));
         spinner0.setValue(1);
-        spinner0.setBounds(120, 190, 90, 90);
+        spinner0.setBounds(120, 110, 90, 90);
         spinner0.addChangeListener(this);
         spinner0.setEnabled(false);
 
         spinner1 = new JSpinner();
         spinner1.setModel(new SpinnerNumberModel(1, Thread.MIN_PRIORITY, Thread.MAX_PRIORITY, 1));
         spinner1.setValue(1);
-        spinner1.setBounds(390, 190, 90, 90);
+        spinner1.setBounds(390, 110, 90, 90);
         spinner1.addChangeListener(this);
         spinner1.setEnabled(false);
 
@@ -92,13 +86,14 @@ class MyThread extends Thread{
     }
     @Override
     public void run() {
-        while(!Thread.currentThread().isInterrupted()) {
+        while(!this.isInterrupted()) {
             synchronized (slider){
-            if (goal == 10) {slider.setValue(slider.getValue() - 5);}
-            else if (goal == 90) {slider.setValue(slider.getValue() + 5);}
+            if (goal == 10 && slider.getValue()>10) {slider.setValue(slider.getValue() - 5);}
+            else if (goal == 90 && slider.getValue()<90) {slider.setValue(slider.getValue() + 5);}
             try {
-                Thread.sleep(100);
+                this.sleep(100);
             } catch (Exception e) {
+                this.interrupt();
                 System.out.println(e);
             }
             }
