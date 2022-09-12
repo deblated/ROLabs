@@ -46,11 +46,13 @@ public class Window1 implements ActionListener{
         }
         else if (e.getSource()==buttonStop1){
             th1.interrupt();
+            th1 = null;
             semafor = 1;
             buttonStop1.setEnabled(false);
         }
         else if (e.getSource()==buttonStop2){
             th2.interrupt();
+            th2 = null;
             semafor = 1;
             buttonStop2.setEnabled(false);
         }

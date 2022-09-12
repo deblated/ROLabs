@@ -19,6 +19,8 @@ public class Window implements ActionListener, ChangeListener {
             th2 = new MyThread(slider,90);
             th1.setPriority(1);
             th2.setPriority(1);
+            th1.setDaemon(true);
+            th2.setDaemon(true);
             th1.start();
             th2.start();
             button.setEnabled(false);
