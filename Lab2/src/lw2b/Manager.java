@@ -4,14 +4,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class Manager {
-    private int numberOfGoods = 13;
+    private final int numberOfGoods = 13;
     private int totalPrice = 0;
 
     private BlockingQueue<Product> storage = new ArrayBlockingQueue<Product>(numberOfGoods);
     private BlockingQueue<Product> storage_car = new ArrayBlockingQueue<Product>(numberOfGoods);
     private BlockingQueue<Product> car = new ArrayBlockingQueue<Product>(numberOfGoods);
 
-    Thread Ivanov,Petrov,Nechyporchuk;
+    private Thread Ivanov,Petrov,Nechyporchuk;
 
     public void manageProducts() throws InterruptedException {
         generateProducts();
@@ -34,33 +34,29 @@ public class Manager {
             storage.put(new Product());
         }
     }
-
     private void producer() throws InterruptedException {
         while (!storage.isEmpty()) {
-            storage_car.put(storage.take());
             System.out.println("Іванов виносить майно..." );
-            Thread.currentThread().sleep(250);
+            storage_car.put(storage.take());
+            Thread.currentThread().sleep(100);
         }
-
     }
-
     private void producer_consumer() throws InterruptedException {
         while (true) {
-            car.put(storage_car.take());
             System.out.println("Петров вантажить майно..." );
-            Thread.currentThread().sleep(500);
+            car.put(storage_car.take());
+            Thread.currentThread().sleep(200);
 
             if (storage.isEmpty() && storage_car.isEmpty()) {
                 break;
             }
         }
     }
-
     private void consumer() throws InterruptedException {
         while (true) {
-            totalPrice += car.take().getPrice();
             System.out.println("Нечипорчук підраховує вартість..." );
-            Thread.currentThread().sleep(750);
+            totalPrice += car.take().getPrice();
+            Thread.currentThread().sleep(300);
 
             if (storage.isEmpty() && car.isEmpty() && storage_car.isEmpty()) {
                 break;
