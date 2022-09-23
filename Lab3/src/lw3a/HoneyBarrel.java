@@ -3,28 +3,24 @@ package lw3a;
 public class HoneyBarrel {
     private int numOfSwallows;
     private int currentNumOfSwallows;
-    private int numOfBees;
-    private MySemaphore sem;
+    private final int numOfBees;
     private Thread bear;
     private Thread[] bees;
-    private boolean isSleepingBear;
-    private boolean isSleepingBee;
 
+    private boolean semaphore;
 
     HoneyBarrel(int N, int n){
         this.numOfSwallows=N;
         this.currentNumOfSwallows = 0;
         this.numOfBees=n;
-        this.sem = new MySemaphore();
-        this.bear= new Thread(new Bear(this,sem));
+        this.bear= new Thread(new Bear(this));
         bear.setName("Ведмідь");
         this.bees=new Thread[numOfBees];
         for(int i =0;i<numOfBees;i++){
-            bees[i] = new Thread(new Bee(this,sem));
+            bees[i] = new Thread(new Bee(this));
             bees[i].setName("Бджола "+ (i+1));
         }
-        this.isSleepingBear = false;
-        this.isSleepingBee = true;
+        this.semaphore = true;
     }
 
     public void StartWork(){
@@ -41,11 +37,12 @@ public class HoneyBarrel {
             try{
                 Thread.currentThread().sleep(250);
             }
-            catch(InterruptedException e){}
+            catch(InterruptedException e){
+                e.printStackTrace();
+            }
         }
         else{
-            isSleepingBee=true;
-            isSleepingBear=false;
+            this.semaphore=false;
         }
   }
 
@@ -56,20 +53,15 @@ public class HoneyBarrel {
             try {
                 Thread.currentThread().sleep(1000);
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         else{
-            isSleepingBee=false;
-            isSleepingBear=true;
+           this.semaphore=true;
         }
     }
 
-    public boolean getBearStatus(){
-        return isSleepingBear;
-    }
-    public boolean getBeeStatus(){
-        return isSleepingBee;
-    }
+    public boolean getStatus(){return semaphore;}
 }
 
 
