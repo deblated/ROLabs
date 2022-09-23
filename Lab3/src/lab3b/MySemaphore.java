@@ -1,5 +1,6 @@
 package lab3b;
 
+
 public class MySemaphore{
     private boolean isAvailable = true;
     public void acquire() throws InterruptedException{

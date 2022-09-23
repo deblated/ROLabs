@@ -1,8 +1,11 @@
 package lab3b;
 
+import java.util.concurrent.Semaphore;
+
+
 public class Customer implements Runnable {
     private final HairdresserShop shop;
-    private MySemaphore semaphore;
+    private Semaphore semaphore;
     private int id;
     private static int ID = 0;
 
@@ -18,7 +21,7 @@ public class Customer implements Runnable {
         return id;
     }
 
-    public Customer(HairdresserShop shop, MySemaphore semaphore) {
+    public Customer(HairdresserShop shop, Semaphore semaphore) {
         this.shop = shop;
         this.semaphore = semaphore;
         this.setId(getID());
@@ -28,8 +31,9 @@ public class Customer implements Runnable {
     public void run() {
         while(true) {
                 try {
+                    Thread.currentThread().sleep(((getId()%3)+1)*1);
                     semaphore.acquire();
-                    Thread.currentThread().sleep(((getId()%3)+1)*1000);
+                    Thread.currentThread().sleep(((getId()%3)+1)*30);
                     int currentCount = shop.customersCount();
 
                     if (!shop.getIsSleeping()) {
@@ -39,13 +43,12 @@ public class Customer implements Runnable {
                         shop.setIsSleeping(false);
                     }
                     shop.addCustomer(this);
+                    semaphore.release();
                     synchronized (this) {
                         wait();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                } finally {
-                    semaphore.release();
                 }
         }
     }

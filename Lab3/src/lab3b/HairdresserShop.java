@@ -3,13 +3,16 @@ package lab3b;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import java.util.concurrent.Semaphore;
+
+
 public class HairdresserShop {
     private BlockingQueue<Customer> customers;
     private Thread[] threads;
     private Thread hairdresser;
     private int size;
-    private MySemaphore sem;
     private boolean isSleeping = false;
+    private Semaphore semaphore;
 
     public boolean getIsSleeping(){
         return isSleeping;
@@ -18,14 +21,14 @@ public class HairdresserShop {
         isSleeping = val;
     }
     public HairdresserShop(int N) {
-        this.sem = new MySemaphore();
+        this.semaphore=new Semaphore(1);
         this.customers = new LinkedBlockingQueue<>();
         this.size=N;
         threads = new Thread[size];
         for(int i = 0; i < size; i++) {
-            threads[i] = new Thread(new Customer(this, sem));
+            threads[i] = new Thread(new Customer(this, semaphore));
         }
-        hairdresser = new Thread(new Hairdresser(this, sem));
+        hairdresser = new Thread(new Hairdresser(this, semaphore));
     }
 
     public void start() {
