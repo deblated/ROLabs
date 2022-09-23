@@ -4,7 +4,7 @@ public class HoneyBarrel {
     private int numOfSwallows;
     private int currentNumOfSwallows;
     private int numOfBees;
-    private Sem sem;
+    private MySemaphore sem;
     private Thread bear;
     private Thread[] bees;
     private boolean isSleepingBear;
@@ -15,7 +15,7 @@ public class HoneyBarrel {
         this.numOfSwallows=N;
         this.currentNumOfSwallows = 0;
         this.numOfBees=n;
-        this.sem = new Sem();
+        this.sem = new MySemaphore();
         this.bear= new Thread(new Bear(this,sem));
         bear.setName("Ведмідь");
         this.bees=new Thread[numOfBees];
@@ -37,7 +37,7 @@ public class HoneyBarrel {
     public synchronized void BeeWork() {
         if (currentNumOfSwallows<numOfSwallows){
             currentNumOfSwallows++;
-            System.out.println(Thread.currentThread().getName()+" наповнює глечик " + this.getCurrentNumOfSwallows()+"/"+ this.getNumOfSwallows()+"...");
+            System.out.println(Thread.currentThread().getName()+" наповнює глечик " + this.currentNumOfSwallows+"/"+ this.numOfSwallows+"...");
             try{
                 Thread.currentThread().sleep(250);
             }
@@ -70,20 +70,6 @@ public class HoneyBarrel {
     public boolean getBeeStatus(){
         return isSleepingBee;
     }
-
-    public synchronized boolean getCurrentStatus(){
-        return numOfSwallows==currentNumOfSwallows;
-    }
-    public int getCurrentNumOfSwallows(){
-        return currentNumOfSwallows;
-    }
-    public int getNumOfSwallows(){
-        return numOfSwallows;
-    }
-
-
-
-
 }
 
 

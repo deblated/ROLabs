@@ -1,6 +1,6 @@
 package lw3a;
 
-class Sem{
+class MySemaphore {
     private boolean isAvailable = true;
     public void acquire() throws InterruptedException{
         this.isAvailable=false;
@@ -15,25 +15,25 @@ class Sem{
 
 class Bear implements Runnable {
     private final HoneyBarrel barrel;
-    private Sem sem;
+    private MySemaphore semaphore;
 
-    public Bear(HoneyBarrel barrel, Sem sem){
+    public Bear(HoneyBarrel barrel, MySemaphore semaphore){
         this.barrel = barrel;
-        this.sem = sem;
+        this.semaphore = semaphore;
     }
     @Override
     public void run() {
         while (true) {
-            if(/*this.sem.getAvailable() && barrel.getCurrentStatus()*/ barrel.getBeeStatus()==true && barrel.getBearStatus()==false){
+            if(barrel.getBeeStatus()==true && barrel.getBearStatus()==false){
                 try{
-                    this.sem.acquire();
+                    this.semaphore.acquire();
                     barrel.BearWork();
                 }
                 catch(InterruptedException e){
                     e.printStackTrace();
                 }
                 finally{
-                    sem.release();
+                    semaphore.release();
                 }
             }
             try{
@@ -48,25 +48,25 @@ class Bear implements Runnable {
 
 class Bee implements Runnable {
     private final HoneyBarrel barrel;
-    private Sem sem;
+    private MySemaphore semaphore;
 
-    public Bee(HoneyBarrel barrel, Sem sem){
+    public Bee(HoneyBarrel barrel, MySemaphore semaphore){
         this.barrel = barrel;
-        this.sem = sem;
+        this.semaphore = semaphore;
     }
     @Override
     public void run() {
         while (true) {
-            if(/*this.sem.getAvailable() &&!barrel.getCurrentStatus()*/ barrel.getBeeStatus()==false && barrel.getBearStatus()==true){
+            if(barrel.getBeeStatus()==false && barrel.getBearStatus()==true){
                 try{
-                    this.sem.acquire();
+                    this.semaphore.acquire();
                     barrel.BeeWork();
                 }
                 catch(InterruptedException e){
                     e.printStackTrace();
                 }
                 finally{
-                    sem.release();
+                    semaphore.release();
                 }
             }
             try{
