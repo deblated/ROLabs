@@ -154,7 +154,6 @@ func priceEditor(graph *Graph, cities []string) {
 		fmt.Printf("PriceEditor: змінив ціну з %s до %s. Стара ціна %d, нова ціна %d\n", from, to, oldPrice, newPrice)
 	}
 }
-
 func routeEditor(graph *Graph, cities []string) {
 	from := cities[rand.Int()%len(cities)]
 	to := cities[rand.Int()%len(cities)]
@@ -180,7 +179,6 @@ func routeEditor(graph *Graph, cities []string) {
 		}
 	}
 }
-
 func cityEditor(graph *Graph, cities []string) {
 	city := cities[rand.Int()%len(cities)]
 	toRemove := rand.Intn(2) == 0
@@ -198,7 +196,6 @@ func cityEditor(graph *Graph, cities []string) {
 		}
 	}
 }
-
 func routeFinder(graph *Graph, cities []string) {
 	from := cities[rand.Int()%len(cities)]
 	to := cities[rand.Int()%len(cities)]
@@ -245,6 +242,7 @@ func findPerformer(graph *Graph, cities []string) {
 		graph.lock.RUnlock()
 	}
 }
+
 func main() {
 	cities := []string{"Kyiv", "Odesa", "Lviv", "Mariupol", "Vinnytsia", "Zhytomyr", "Dnipro", "Kharkiv", "Kherson", "Simferopol", "City1", "City2", "City3"}
 	graph := Graph{}
